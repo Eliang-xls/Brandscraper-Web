@@ -5,13 +5,14 @@ import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gsta
 // --- Firebase Configuration ---
 // IMPORTANT: Replace with your actual Firebase project configuration.
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_AUTH_DOMAIN",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_STORAGE_BUCKET",
-    messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-    appId: "YOUR_APP_ID"
-};
+    apiKey: "AIzaSyAbC0O5FABCSQkkCgBwyc4CTRTaXpbf6_Y",
+    authDomain: "brands-database.firebaseapp.com",
+    projectId: "brands-database",
+    storageBucket: "brands-database.firebasestorage.app",
+    messagingSenderId: "672484468614",
+    appId: "1:672484468614:web:54f2a4d1be9686446b6e07",
+    measurementId: "G-43GHZRZB30"
+  };
 
 // --- App Initialization ---
 let app, db, auth, userId;
