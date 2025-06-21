@@ -2,7 +2,7 @@ import { initDatabase, loadStoredBrands, saveBrands, clearAllBrands } from './db
 import { updateUI, log, addAlert, updateScheduleStatus, initCharts, initScheduleModal, initExportModal, renderTable } from './ui.js';
 import { fetchBrandsFromWikipedia } from './datasources/wikipedia.js';
 import { fetchBrandsFromBaidu } from './datasources/baidu.js';
-import { fetchBrandFromAPI } from './brandfetch.js';
+// import { fetchBrandFromAPI } from './brandfetch.js'; // Logo-fetching will be added in step 2
 
 // --- App State ---
 export let state = {
@@ -57,7 +57,7 @@ function setupEventListeners() {
     if (stopBtn) stopBtn.addEventListener('click', stopScraping);
 }
 
-// --- Scraping Logic ---
+// --- Scraping Logic (NO LOGO fetching) ---
 async function startScraping() {
     if (state.isScraping) return;
     state.isScraping = true;
@@ -105,39 +105,28 @@ async function startScraping() {
             return true;
         });
 
-        // 2. For each, fetch logo from Brandfetch using company name
-        // Prompt for API key if not present
-        let apiKey = localStorage.getItem("brandfetch_api_key");
-        if (!apiKey) {
-            apiKey = prompt("Enter your Brandfetch API key to fetch logos:");
-            if (apiKey) localStorage.setItem("brandfetch_api_key", apiKey);
-        }
         let count = 0;
         for (const brand of allScrapedBrands) {
             if (stopRequested) break;
             // Optionally, skip if already present in state
             if (state.allBrands.some(b => b.name.toLowerCase() === brand.name.toLowerCase())) continue;
-            let logoData = null;
-            if (apiKey) {
-                // Use brand name for Brandfetch (usually expects domain, but will fallback if none)
-                logoData = await fetchBrandFromAPI(brand.name, apiKey);
-            }
-            const mergedBrand = {
+            // Only store basic brand info for now (logo: "")
+            const storedBrand = {
                 name: brand.name,
                 founder: brand.founder || "",
                 classification: brand.classification || "",
                 source: brand.source,
-                logo: logoData && logoData.logo ? logoData.logo : ""
+                logo: "" // Intentionally left blank for step 1
             };
-            state.allBrands.push(mergedBrand);
+            state.allBrands.push(storedBrand);
             state.currentRunBrandCount++;
             state.stats.successfulRuns++;
-            state.stats.brandsBySource[mergedBrand.source] = (state.stats.brandsBySource[mergedBrand.source] || 0) + 1;
+            state.stats.brandsBySource[storedBrand.source] = (state.stats.brandsBySource[storedBrand.source] || 0) + 1;
             await saveBrands(state.allBrands);
             updateUI(state);
-            log(`Added brand: ${mergedBrand.name} (${mergedBrand.source})`, 'info');
+            log(`Added brand: ${storedBrand.name} (${storedBrand.source})`, 'info');
             count++;
-            await sleep(1200); // Throttle to avoid API rate limits
+            await sleep(300); // Throttle to avoid flooding UI
         }
         log(`Scraping complete. Added ${count} new brands.`, 'success');
     } catch (err) {
