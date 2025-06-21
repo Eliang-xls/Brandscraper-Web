@@ -174,3 +174,4 @@ function sleep(ms) {
 
 // Expose state for debugging
 window.appState = state;
+window.saveBrands = saveBrands;
