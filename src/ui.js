@@ -4,6 +4,32 @@ let runStatusChart = null;
 let brandsBySourceChart = null;
 
 export function updateUI(state) {
+    // --- STATUS INDICATOR ---
+    const statusDot = document.getElementById('statusIndicatorDot');
+    const statusText = document.getElementById('statusIndicatorText');
+    if (statusDot && statusText) {
+        if (state.isScraping) {
+            statusDot.className = 'w-3 h-3 rounded-full bg-green-500 mr-3';
+            statusText.textContent = 'Scraping...';
+        } else if (!state.dbInitialized) {
+            statusDot.className = 'w-3 h-3 rounded-full bg-gray-400 mr-3';
+            statusText.textContent = 'Initializing';
+        } else {
+            statusDot.className = 'w-3 h-3 rounded-full bg-blue-400 mr-3';
+            statusText.textContent = 'Idle';
+        }
+    }
+
+    // --- STORAGE STATUS ---
+    const storageStatus = document.getElementById('storageStatusText');
+    if (storageStatus) {
+        if (!itialized) {
+            storageStatus.textContent = 'Storage: Initializing...';
+        } else {
+            storageStatus.textContent = 'Storage: Ready';
+        }
+    }
+
     // Update KPIs
     document.getElementById('kpiTotalBrands').textContent = state.allBrands.length;
     document.getElementById('kpiTotalRuns').textContent = state.stats.totalRuns;
@@ -19,8 +45,35 @@ export function updateUI(state) {
 }
 
 // --- LOGS AND ALERTS (unchanged) ---
-export function log(message, type = 'info') { /* ...as before... */ }
-export function addAlert(message, type = 'warning') { /* ...as before... */ }
+export function log(message, type = 'info') {
+    const logsContainer = document.getElementById('logsContainer');
+    if (!logsContainer) return;
+    const time = new Date().toLocaleTimeString();
+    const color = type === 'error' ? 'text-red-400' :
+                  type === 'success' ? 'text-green-400' :
+                  type === 'warning' ? 'text-yellow-300' :
+                  'text-gray-200';
+    logsContainer.innerHTML += `<div class="${color}">[${time}] ${message}</div>`;
+    logsContainer.scrollTop = logsContainer.scrollHeight;
+}
+
+export function addAlert(message, type = 'warning') {
+    const alertsContainer = document.getElementById('alertsContainer');
+    if (!alertsContainer) return;
+    const color = type === 'error' ? 'bg-red-100 text-red-700' :
+                  type === 'success' ? 'bg-green-100 text-green-700' :
+                  'bg-yellow-100 text-yellow-700';
+    const alert = document.createElement('div');
+    alert.className = `rounded px-3 py-2 ${color} border border-gray-200 shadow-sm`;
+    alert.innerText = message;
+    alertsContainer.appendChild(alert);
+    setTimeout(() => {
+        alert.remove();
+        if (alertsContainer.children.length === 0) {
+            alertsContainer.innerHTML = '<p class="text-gray-500">No alerts yet.</p>';
+        }
+    }, 8000);
+}
 
 // --- CHARTS ---
 export function initCharts(state) {
