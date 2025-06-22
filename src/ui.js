@@ -145,8 +145,24 @@ function updateCharts(state) {
 }
 
 // --- SCHEDULE MODAL (unchanged stubs) ---
-export function initScheduleModal(state) { /* ...stub... */ }
-export function updateScheduleStatus(state) { /* ...stub... */ }
+export function initScheduleModal(state) { 
+            scheduleButton.addEventListener('click', () => scheduleModal.classList.remove('hidden'));
+            closeScheduleModal.addEventListener('click', () => scheduleModal.classList.add('hidden'));
+            scheduleOverlay.addEventListener('click', () => scheduleModal.classList.add('hidden'));
+            saveScheduleBtn.addEventListener('click', saveSchedule);
+}
+
+export function updateScheduleStatus(state) { 
+            if (!state.isScheduled || state.targetBrandCount <= 0) {
+            scheduleStatus.innerHTML = '<span class="text-gray-500">No Schedule Set</span>';
+            return;
+            }
+            
+            const frequencyMap = { 'manual': 'Manual Start', 'daily': 'Daily', 'weekly': 'Weekly', 'monthly': 'Monthly' };
+            const freqText = frequencyMap[state.scheduleFrequency];
+            let statusText = `<span class="text-blue-600 font-semibold">Target:</span> ${state.targetBrandCount} Brands | <span class="font-semibold">Mode:</span> ${freqText}`;
+            scheduleStatus.innerHTML = statusText;
+}
 
 // --- EXPORT/IMPORT ---
 export function initExportModal(state) {

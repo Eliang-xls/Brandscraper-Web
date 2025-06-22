@@ -1,5 +1,5 @@
-import { initDatabase, loadStoredBrands, saveBrands, clearAllBrands } from './db.js';
-import { updateUI, log, addAlert, updateScheduleStatus, initCharts, initScheduleModal, initExportModal, renderTable } from './ui.js';
+import { loadStoredBrands, saveBrands } from './db.js';
+import { updateUI, log, addAlert, updateScheduleStatus, initCharts, initScheduleModal, initExportModal } from './ui.js';
 import { fetchBrandsFromWikipedia } from './datasources/wikipedia.js';
 import { fetchBrandsFromBaidu } from './datasources/baidu.js';
 // import { fetchBrandFromAPI } from './brandfetch.js'; // Logo-fetching will be added in step 2
