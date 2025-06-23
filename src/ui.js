@@ -20,26 +20,6 @@ export function updateUI(state) {
         }
     }
 
-    // --- STORAGE STATUS ---
-    const storageStatus = document.getElementById('storageStatus');
-    const storageStatusText = document.getElementById('storageStatusText');
-    if (!storageStatusText) return;
-    switch (status) {
-        case 'ready':
-            storageStatusText.textContent = `Storage: Ready (${state.allBrands.length} brands)`;
-            storageStatus.classList.remove('bg-red-200');
-            storageStatus.classList.add('bg-green-200');
-            break;
-        case 'error':
-            storageStatusText.textContent = 'Storage: Error';
-            storageStatus.classList.remove('bg-green-200');
-            storageStatus.classList.add('bg-red-200');
-            break;
-        default:
-            storageStatusText.textContent = 'Storage: Initializing...';
-            storageStatus.classList.remove('bg-green-200', 'bg-red-200');
-    }
-
     // Update KPIs
     document.getElementById('kpiTotalBrands').textContent = state.allBrands.length;
     document.getElementById('kpiTotalRuns').textContent = state.stats.totalRuns;
@@ -52,6 +32,26 @@ export function updateUI(state) {
     renderTable(state.allBrands, document.getElementById('searchInput') ? document.getElementById('searchInput').value : "");
 
     updateCharts(state);
+}
+
+    // --- STORAGE STATUS ---
+export function updateStorageStatus(status) {
+            if (!storageStatusText) return;
+            switch (status) {
+                case 'ready':
+                    storageStatusText.textContent = `Storage: Ready (${state.allBrands.length} brands)`;
+                    storageStatus.classList.remove('bg-red-200');
+                    storageStatus.classList.add('bg-green-200');
+                    break;
+                case 'error':
+                    storageStatusText.textContent = 'Storage: Error';
+                    storageStatus.classList.remove('bg-green-200');
+                    storageStatus.classList.add('bg-red-200');
+                    break;
+                default:
+                    storageStatusText.textContent = 'Storage: Initializing...';
+                    storageStatus.classList.remove('bg-green-200', 'bg-red-200');
+            }          
 }
 
 // --- LOGS AND ALERTS (unchanged) ---
