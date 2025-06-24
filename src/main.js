@@ -55,6 +55,18 @@ function setupEventListeners() {
     const stopBtn = document.getElementById('stopButton');
     if (startBtn) startBtn.addEventListener('click', startScraping);
     if (stopBtn) stopBtn.addEventListener('click', stopScraping);
+    // Tab switching logic
+    document.querySelectorAll('.nav-tab').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('tab-active'));
+        document.querySelectorAll('.nav-tab').forEach(b => b.classList.add('tab-inactive'));
+        this.classList.add('tab-active');
+        this.classList.remove('tab-inactive');
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.add('hidden'));
+        const sel = this.getAttribute('data-tab');
+        document.getElementById(sel).classList.remove('hidden');
+    });
+});
 }
 
 // --- Scraping Logic (NO LOGO fetching) ---
