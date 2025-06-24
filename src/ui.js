@@ -8,9 +8,15 @@ export function updateUI(state) {
     const statusDot = document.getElementById('statusIndicatorDot');
     const statusText = document.getElementById('statusIndicatorText');
     if (statusDot && statusText) {
-        if (state.isScraping) {
+        if (state.error) {
+            statusDot.className = 'w-3 h-3 rounded-full bg-red-500 mr-3';
+            statusText.textContent = 'Error';
+        } else if (state.isScraping) {
             statusDot.className = 'w-3 h-3 rounded-full bg-green-500 mr-3';
             statusText.textContent = 'Scraping...';
+        } else if (state.isStoppingRequested) {
+            statusDot.className = 'w-3 h-3 rounded-full bg-yellow-400 mr-3';
+            statusText.textContent = 'Stopping...';
         } else if (!state.dbInitialized) {
             statusDot.className = 'w-3 h-3 rounded-full bg-gray-400 mr-3';
             statusText.textContent = 'Initializing';
@@ -32,6 +38,12 @@ export function updateUI(state) {
     renderTable(state.allBrands, document.getElementById('searchInput') ? document.getElementById('searchInput').value : "");
 
     updateCharts(state);
+
+    // Handle Start/Stop button states
+    const startBtn = document.getElementById('startButton');
+    const stopBtn = document.getElementById('stopButton');
+    if (startBtn) startBtn.disabled = state.isScraping;
+    if (stopBtn) stopBtn.disabled = !state.isScraping;
 }
 
     // --- STORAGE STATUS ---
