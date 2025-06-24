@@ -27,6 +27,21 @@ export let state = {
 
 let stopRequested = false;
 
+// --- Navigation ---
+navTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+        navTabs.forEach(t => t.classList.replace('tab-active', 'tab-inactive'));
+        tab.classList.replace('tab-inactive', 'tab-active');
+
+        tabContents.forEach(content => {
+            content.classList.add('hidden');
+            if (content.id === tab.dataset.tab) {
+                content.classList.remove('hidden');
+            }
+        });
+    });
+});
+
 // --- Main App Initialization ---
 async function initializeApp() {
     updateUI(state); // Show initializing state
